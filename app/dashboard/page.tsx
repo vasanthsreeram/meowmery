@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../providers/AuthProvider';
 import { supabase } from '@/lib/supabase/config';
+import Link from 'next/link';
 
 type MeowmeryPost = {
   id: string;
@@ -57,12 +58,12 @@ export default function Dashboard() {
       {posts.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-600">You haven't created any memories yet.</p>
-          <a
+          <Link
             href="/meowmery/create"
             className="mt-4 inline-block bg-gray-900 text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors"
           >
             Create Your First Memory
-          </a>
+          </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

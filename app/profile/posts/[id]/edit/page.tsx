@@ -1,14 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../../services/supabase';
 import PostForm from '../../../../components/PostForm';
 
-interface Props {
-  params: {
-    id: string;
-  };
+// For client components in Next.js 15, we need to match exactly what the framework expects
+type Props = {
+  params: Promise<{ id: string }>;
 }
 
 export default function EditPost({ params }: Props) {
@@ -16,12 +15,14 @@ export default function EditPost({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  
+  // Extract ID safely from Promise params
+  const postId = useCallback(async () => {
+    const resolvedParams = await params;
+    return resolvedParams.id;
+  }, [params]);
 
-  useEffect(() => {
-    loadPost();
-  }, [params.id]);
-
-  const loadPost = async () => {
+  const loadPost = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -32,6 +33,7 @@ export default function EditPost({ params }: Props) {
         return;
       }
 
+      const id = await postId();
       const { data: post, error: postError } = await supabase
         .from('meowmery_posts')
         .select(`
@@ -44,7 +46,7 @@ export default function EditPost({ params }: Props) {
             tag:tags(*)
           )
         `)
-        .eq('id', params.id)
+        .eq('id', id)
         .eq('user_id', user.id)
         .single();
 
@@ -61,7 +63,11 @@ export default function EditPost({ params }: Props) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId, router]);
+
+  useEffect(() => {
+    loadPost();
+  }, [loadPost]);
 
   if (loading) {
     return (

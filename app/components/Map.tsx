@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+// Import Leaflet CSS
+import 'leaflet/dist/leaflet.css';
 
 interface MapProps {
   onLocationSelect: (lat: number, lng: number, address: string) => void;
@@ -18,9 +20,6 @@ const Map = ({ onLocationSelect }: MapProps) => {
     const initializeMap = async () => {
       const L = (await import('leaflet')).default;
       
-      // Import CSS
-      await import('leaflet/dist/leaflet.css');
-
       // Initialize map
       if (!mapRef.current && containerRef.current) {
         mapRef.current = L.map(containerRef.current).setView([0, 0], 2);

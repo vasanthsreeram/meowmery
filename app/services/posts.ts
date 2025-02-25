@@ -158,7 +158,7 @@ export const postService = {
       const { error: updateError } = await supabase
         .from('meowmery_posts')
         .update({
-          title: formData.title,
+          title: formData.cat_name,  // Use cat_name instead of title to match the PostFormData type
           story: formData.story,
           location: formData.location,
         })

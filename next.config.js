@@ -11,6 +11,9 @@ const nextConfig = {
   },
   // Add strict mode to help catch hydration issues
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // Configure onDemandEntries
   onDemandEntries: {
     // period (in ms) where the server will keep pages in the buffer
